@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Запрошення на побачення ❤️</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Pacifico&display=swap" rel="stylesheet">
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+            touch-action: manipulation;
+        }
+        .romantic-font {
+            font-family: 'Pacifico', cursive;
+        }
+        #hearts-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+        }
+        .screen {
+            display: none;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+        .screen.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        #no-btn {
+            transition: left 0.1s ease-out, top 0.1s ease-out;
+            touch-action: none;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-pink-200 via-rose-100 to-red-200 min-h-screen flex items-center justify-center relative p-4">
+
+    <!-- Background Animated Hearts Canvas -->
+    <canvas id="hearts-canvas"></canvas>
+
+    <main class="relative z-10 max-w-lg w-full p-6 md:p-8 rounded-3xl shadow-2xl glass-card text-center">
+        
+        <!-- ==================== SCREEN 1: THE INVITATION ==================== -->
+        <div id="screen-1" class="screen active space-y-6">
+            <div class="relative w-32 h-32 mx-auto mb-2 rounded-full overflow-hidden shadow-inner border-4 border-rose-300 bg-pink-100 flex items-center justify-center">
+                <img src="https://placehold.co/200x200/ffe4e6/e11d48?text=💖" alt="Heart" class="w-full h-full object-cover animate-pulse" onerror="this.src='https://placehold.co/200x200/ffe4e6/e11d48?text=💖'">
+            </div>
+
+            <h1 class="text-3xl md:text-4xl font-bold text-rose-700 romantic-font leading-tight">
+                Ти підеш зі мною на побачення?
+            </h1>
+            <p class="text-gray-600 text-sm md:text-base">
+                Обіцяю щирі розмови, чудовий настрій та незабутні емоції! ✨
+            </p>
+
+            <div id="buttons-container" class="relative h-28 flex items-center justify-center gap-6 mt-6">
+                <!-- Yes Button -->
+                <button id="yes-btn" class="z-20 bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white font-bold px-8 py-3.5 rounded-full shadow-lg transform hover:scale-110 active:scale-95 transition-all duration-200 text-lg flex items-center gap-2 cursor-pointer">
+                    <span>Так! 🥰</span>
+                </button>
+
+                <!-- Running No Button (Works on PC & Mobile) -->
+                <button id="no-btn" class="absolute z-30 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold px-6 py-3.5 rounded-full shadow-md text-base cursor-pointer">
+                    Ні 😢
+                </button>
+            </div>
+        </div>
+
+
+        <!-- ==================== SCREEN 2: PLACE SELECTION ==================== -->
+        <div id="screen-2" class="screen space-y-6">
+            <div class="w-24 h-24 mx-auto rounded-full overflow-hidden shadow-md border-4 border-rose-300 bg-rose-50 flex items-center justify-center">
+                <img src="https://placehold.co/200x200/ffe4e6/e11d48?text=☕" alt="Place" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/200x200/ffe4e6/e11d48?text=☕'">
+            </div>
+
+            <h2 class="text-2xl md:text-3xl font-bold text-rose-700 romantic-font">
+                Куди б тобі хотілося піти?
+            </h2>
+            <p class="text-gray-600 text-sm">Обери формат нашої зустрічі або впиши свій варіант:</p>
+
+            <!-- Location Options Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-left">
+                <label class="flex items-center gap-3 p-3.5 rounded-2xl border-2 border-rose-200 bg-white/70 hover:bg-rose-50 cursor-pointer transition-all">
+                    <input type="radio" name="place" value="Затишна кав'язня ☕" class="accent-rose-500 w-4 h-4" checked>
+                    <div>
+                        <p class="font-semibold text-gray-800 text-sm">Затишна кав'язня ☕</p>
+                        <p class="text-xs text-gray-500">Смачна кава та десерти</p>
+                    </div>
+                </label>
+
+                <label class="flex items-center gap-3 p-3.5 rounded-2xl border-2 border-rose-200 bg-white/70 hover:bg-rose-50 cursor-pointer transition-all">
+                    <input type="radio" name="place" value="Романтична вечеря 🍷" class="accent-rose-500 w-4 h-4">
+                    <div>
+                        <p class="font-semibold text-gray-800 text-sm">Романтична вечеря 🍷</p>
+                        <p class="text-xs text-gray-500">Приємна атмосфера і смаколики</p>
+                    </div>
+                </label>
+
+                <label class="flex items-center gap-3 p-3.5 rounded-2xl border-2 border-rose-200 bg-white/70 hover:bg-rose-50 cursor-pointer transition-all">
+                    <input type="radio" name="place" value="Перегляд кіно 🍿" class="accent-rose-500 w-4 h-4">
+                    <div>
+                        <p class="font-semibold text-gray-800 text-sm">Перегляд кіно 🍿</p>
+                        <p class="text-xs text-gray-500">Цікавий фільм та попкорн</p>
+                    </div>
+                </label>
+
+                <label class="flex items-center gap-3 p-3.5 rounded-2xl border-2 border-rose-200 bg-white/70 hover:bg-rose-50 cursor-pointer transition-all">
+                    <input type="radio" name="place" value="Прогулянка вечірнім містом 🌙" class="accent-rose-500 w-4 h-4">
+                    <div>
+                        <p class="font-semibold text-gray-800 text-sm">Прогулянка містом 🌙</p>
+                        <p class="text-xs text-gray-500">Вечірні вогні та розмови</p>
+                    </div>
+                </label>
+            </div>
+
+            <!-- Custom Option Input -->
+            <div class="mt-2">
+                <input type="text" id="custom-place" placeholder="Або свій варіант (напиши сюди)..." class="w-full px-4 py-2.5 rounded-xl border border-rose-200 focus:outline-none focus:ring-2 focus:ring-rose-400 text-sm bg-white/90">
+            </div>
+
+            <!-- Navigation Button -->
+            <div class="pt-2">
+                <button id="next-to-time" class="w-full bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white font-bold py-3 rounded-full shadow-md transition-all text-base cursor-pointer">
+                    Далі ✨
+                </button>
+            </div>
+        </div>
+
+
+        <!-- ==================== SCREEN 3: TIME SELECTION ==================== -->
+        <div id="screen-3" class="screen space-y-6">
+            <div class="w-24 h-24 mx-auto rounded-full overflow-hidden shadow-md border-4 border-rose-300 bg-rose-50 flex items-center justify-center">
+                <img src="https://placehold.co/200x200/ffe4e6/e11d48?text=📅" alt="Time" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/200x200/ffe4e6/e11d48?text=📅'">
+            </div>
+
+            <h2 class="text-2xl md:text-3xl font-bold text-rose-700 romantic-font">
+                Коли тобі зручніше?
+            </h2>
+            <p class="text-gray-600 text-sm">Обери день або вкажи свій час:</p>
+
+            <!-- Time Options Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-left">
+                <label class="flex items-center gap-3 p-3.5 rounded-2xl border-2 border-rose-200 bg-white/70 hover:bg-rose-50 cursor-pointer transition-all">
+                    <input type="radio" name="time" value="Цієї суботи 🌸" class="accent-rose-500 w-4 h-4" checked>
+                    <div>
+                        <p class="font-semibold text-gray-800 text-sm">Цієї суботи 🌸</p>
+                        <p class="text-xs text-gray-500">Чудовий вихідний</p>
+                    </div>
+                </label>
+
+                <label class="flex items-center gap-3 p-3.5 rounded-2xl border-2 border-rose-200 bg-white/70 hover:bg-rose-50 cursor-pointer transition-all">
+                    <input type="radio" name="time" value="Цієї неділі ☀️" class="accent-rose-500 w-4 h-4">
+                    <div>
+                        <p class="font-semibold text-gray-800 text-sm">Цієї неділі ☀️</p>
+                        <p class="text-xs text-gray-500">Спокійний вечір</p>
+                    </div>
+                </label>
+
+                <label class="flex items-center gap-3 p-3.5 rounded-2xl border-2 border-rose-200 bg-white/70 hover:bg-rose-50 cursor-pointer transition-all">
+                    <input type="radio" name="time" value="Будь-який будній вечір 🌆" class="accent-rose-500 w-4 h-4">
+                    <div>
+                        <p class="font-semibold text-gray-800 text-sm">Будній вечір 🌆</p>
+                        <p class="text-xs text-gray-500">Після робочих справ</p>
+                    </div>
+                </label>
+
+                <label class="flex items-center gap-3 p-3.5 rounded-2xl border-2 border-rose-200 bg-white/70 hover:bg-rose-50 cursor-pointer transition-all">
+                    <input type="radio" name="time" value="Завжди готовий(а)! 🔥" class="accent-rose-500 w-4 h-4">
+                    <div>
+                        <p class="font-semibold text-gray-800 text-sm">Завжди готовий(а)! 🔥</p>
+                        <p class="text-xs text-gray-500">Час не має значення</p>
+                    </div>
+                </label>
+            </div>
+
+            <!-- Custom Time Input -->
+            <div class="mt-2">
+                <input type="text" id="custom-time" placeholder="Або свій день/час (наприклад, п'ятниця о 18:00)..." class="w-full px-4 py-2.5 rounded-xl border border-rose-200 focus:outline-none focus:ring-2 focus:ring-rose-400 text-sm bg-white/90">
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="flex gap-3 pt-2">
+                <button id="back-to-screen-2" class="w-1/3 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-3 rounded-full shadow-sm transition-all text-sm cursor-pointer">
+                    Назад
+                </button>
+                <button id="finish-btn" class="w-2/3 bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white font-bold py-3 rounded-full shadow-md transition-all text-base cursor-pointer">
+                    Підтвердити ❤️
+                </button>
+            </div>
+        </div>
+
+
+        <!-- ==================== SCREEN 4: SUCCESS / SUMMARY ==================== -->
+        <div id="screen-4" class="screen space-y-6 py-2">
+            <div class="w-32 h-32 mx-auto rounded-full overflow-hidden shadow-lg border-4 border-rose-400 bg-rose-50 flex items-center justify-center animate-bounce">
+                <img src="https://placehold.co/200x200/ffe4e6/e11d48?text=💖" alt="Celebration" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/200x200/ffe4e6/e11d48?text=💖'">
+            </div>
+
+            <h2 class="text-3xl md:text-4xl font-bold text-rose-600 romantic-font">
+                Ура! Побачення узгоджено! 🎉
+            </h2>
+
+            <div class="bg-rose-50/90 border border-rose-200 p-4 rounded-2xl text-left space-y-2 shadow-inner">
+                <p class="text-sm text-gray-700 flex items-center gap-2">
+                    <span class="font-semibold text-rose-700">📍 Локація:</span> <span id="summary-place" class="italic">Кав'язня</span>
+                </p>
+                <p class="text-sm text-gray-700 flex items-center gap-2">
+                    <span class="font-semibold text-rose-700">⏰ Коли:</span> <span id="summary-time" class="italic">Субота</span>
+                </p>
+            </div>
+
+            <p class="text-gray-700 text-sm md:text-base leading-relaxed">
+                Це найкраща новина! Чекаю на нашу зустріч із нетерпінням. Ти робиш мене найщасливішою людиною! ❤️
+            </p>
+
+            <div class="pt-2">
+                <span class="inline-block bg-rose-100 text-rose-700 font-semibold px-5 py-2.5 rounded-full text-sm shadow-sm">
+                    До зустрічі! 🌹✨
+                </span>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // --- FLOATING HEARTS BACKGROUND ANIMATION ---
+        const canvas = document.getElementById('hearts-canvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        const hearts = [];
+        const heartCount = 35;
+
+        class Heart {
+            constructor() {
+                this.reset();
+            }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = canvas.height + Math.random() * 200;
+                this.size = Math.random() * 15 + 10;
+                this.speed = Math.random() * 1.5 + 0.5;
+                this.opacity = Math.random() * 0.5 + 0.3;
+                this.angle = Math.random() * Math.PI * 2;
+                this.spin = Math.random() * 0.03 - 0.015;
+                this.color = `rgba(244, 63, 94, ${this.opacity})`;
+            }
+            update() {
+                this.y -= this.speed;
+                this.angle += this.spin;
+                if (this.y < -50) {
+                    this.reset();
+                }
+            }
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.angle);
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                let s = this.size;
+                ctx.moveTo(0, s / 4);
+                ctx.bezierCurveTo(s / 2, -s / 2, s, s / 3, 0, s);
+                ctx.bezierCurveTo(-s, s / 3, -s / 2, -s / 2, 0, s / 4);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        for (let i = 0; i < heartCount; i++) {
+            hearts.push(new Heart());
+        }
+
+        function animateHearts() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            hearts.forEach(heart => {
+                heart.update();
+                heart.draw();
+            });
+            requestAnimationFrame(animateHearts);
+        }
+        animateHearts();
+
+
+        // --- MULTI-SCREEN NAVIGATION & STATE LOGIC ---
+        const screen1 = document.getElementById('screen-1');
+        const screen2 = document.getElementById('screen-2');
+        const screen3 = document.getElementById('screen-3');
+        const screen4 = document.getElementById('screen-4');
+
+        const yesBtn = document.getElementById('yes-btn');
+        const noBtn = document.getElementById('no-btn');
+        const nextToTimeBtn = document.getElementById('next-to-time');
+        const backToScreen2Btn = document.getElementById('back-to-screen-2');
+        const finishBtn = document.getElementById('finish-btn');
+
+        let selectedPlace = '';
+        let selectedTime = '';
+
+        function switchScreen(hideScreen, showScreen) {
+            hideScreen.classList.remove('active');
+            setTimeout(() => {
+                hideScreen.style.display = 'none';
+                showScreen.style.display = 'block';
+                setTimeout(() => {
+                    showScreen.classList.add('active');
+                }, 50);
+            }, 300);
+        }
+
+        // Running "No" Button logic (Supports PC Hover & Mobile Touch)
+        function moveNoButton() {
+            const padding = 50;
+            const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+            const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+            const minX = padding;
+            const minY = padding;
+
+            const randomX = Math.floor(Math.random() * (maxX - minX + 1)) + minX;
+            const randomY = Math.floor(Math.random() * (maxY - minY + 1)) + minY;
+
+            noBtn.style.position = 'fixed';
+            noBtn.style.left = randomX + 'px';
+            noBtn.style.top = randomY + 'px';
+        }
+
+        noBtn.addEventListener('mouseover', moveNoButton);
+        noBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            moveNoButton();
+        });
+        noBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            moveNoButton();
+        });
+
+        // Screen 1 -> Screen 2
+        yesBtn.addEventListener('click', () => {
+            switchScreen(screen1, screen2);
+        });
+
+        // Screen 2 -> Screen 3
+        nextToTimeBtn.addEventListener('click', () => {
+            const customPlaceInput = document.getElementById('custom-place').value.trim();
+            if (customPlaceInput) {
+                selectedPlace = customPlaceInput;
+            } else {
+                const checkedPlace = document.querySelector('input[name="place"]:checked');
+                selectedPlace = checkedPlace ? checkedPlace.value : "Затишна кав'язня ☕";
+            }
+            switchScreen(screen2, screen3);
+        });
+
+        // Screen 3 -> Screen 2 (Back)
+        backToScreen2Btn.addEventListener('click', () => {
+            switchScreen(screen3, screen2);
+        });
+
+        // Screen 3 -> Screen 4 (Finish & Confetti)
+        finishBtn.addEventListener('click', () => {
+            const customTimeInput = document.getElementById('custom-time').value.trim();
+            if (customTimeInput) {
+                selectedTime = customTimeInput;
+            } else {
+                const checkedTime = document.querySelector('input[name="time"]:checked');
+                selectedTime = checkedTime ? checkedTime.value : "Цієї суботи 🌸";
+            }
+
+            // Populate summary
+            document.getElementById('summary-place').textContent = selectedPlace;
+            document.getElementById('summary-time').textContent = selectedTime;
+
+            switchScreen(screen3, screen4);
+
+            // Trigger Confetti Celebration
+            const duration = 4 * 1000;
+            const animationEnd = Date.now() + duration;
+            const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 1000 };
+
+            function randomInRange(min, max) {
+                return Math.random() * (max - min) + min;
+            }
+
+            const interval = setInterval(function() {
+                const timeLeft = animationEnd - Date.now();
+                if (timeLeft <= 0) {
+                    return clearInterval(interval);
+                }
+                const particleCount = 50 * (timeLeft / duration);
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+            }, 250);
+        });
+    </script>
+</body>
+</html>
+```
+eof
+
+### Як отримати посилання та поділитися сайтом:
+1. Натисніть кнопку **Preview** (Перегляд) праворуч у верхній частині панелі редактора, щоб побачити, як працює ваш сайт.
+2. Ви можете опублікувати або експортувати цей код на безкоштовні платстини хостингу (такі як **Netlify Drop**, **Vercel**, або **GitHub Pages**), просто зберігши весь цей код в один файл з назвою `index.html` і перетягнувши його туди. Після цього ви отримаєте посилання, яким зможете поділитися!
